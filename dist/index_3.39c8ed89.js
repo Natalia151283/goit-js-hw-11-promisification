@@ -117,160 +117,67 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"index_3.js":[function(require,module,exports) {
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-  return bundleURL;
-}
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-  return '/';
-}
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
-}
+var randomIntegerFromInterval = function randomIntegerFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
+var makeTransaction = function makeTransaction(transaction) {
+  var delay = randomIntegerFromInterval(200, 500);
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      var canProcess = Math.random() > 0.3;
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"scss/main.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"../style.css":"style.css","_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.js":[function(require,module,exports) {
-"use strict";
-
-require("./scss/main.scss");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var timerFace = document.querySelector("#timer-1");
-
-var CountdownTimer = /*#__PURE__*/function () {
-  function CountdownTimer(_ref) {
-    var selector = _ref.selector,
-        targetDate = _ref.targetDate;
-
-    _classCallCheck(this, CountdownTimer);
-
-    this.targetDate = targetDate;
-    this.selector = document.querySelector(selector);
-    this.start();
-  }
-
-  _createClass(CountdownTimer, [{
-    key: "start",
-    value: function start() {
-      var _this = this;
-
-      if (this.isActive) {
-        return;
+      if (canProcess) {
+        resolve([transaction.id, delay]);
       }
 
-      this.isActive = true;
-      this.intervalId = setInterval(function () {
-        var currentTime = Date.now();
-        var deltaTime = _this.targetDate - currentTime;
+      reject(transaction.id);
+    }, delay);
+  });
+};
 
-        var time = _this.getTime(deltaTime);
+var logSuccess = function logSuccess(_ref) {
+  var _ref2 = _slicedToArray(_ref, 2),
+      id = _ref2[0],
+      time = _ref2[1];
 
-        console.log(time);
-        _this.selector.querySelector('span[data-value="days"]').textContent = time.days;
-        _this.selector.querySelector('span[data-value="hours"]').textContent = time.hours;
-        _this.selector.querySelector('span[data-value="mins"]').textContent = time.mins;
-        _this.selector.querySelector('span[data-value="secs"]').textContent = time.secs;
-      }, 1000);
-    }
-  }, {
-    key: "getTime",
-    value: function getTime(time) {
-      var days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-      var hours = this.pad(Math.floor(time % (1000 * 60 * 60 * 24) / (1000 * 60 * 60)));
-      var mins = this.pad(Math.floor(time % (1000 * 60 * 60) / (1000 * 60)));
-      var secs = this.pad(Math.floor(time % (1000 * 60) / 1000));
-      return {
-        days: days,
-        hours: hours,
-        mins: mins,
-        secs: secs
-      };
-    }
-  }, {
-    key: "pad",
-    value: function pad(value) {
-      return String(value).padStart(2, "0");
-    }
-  }]);
+  console.log("Transaction ".concat(id, " processed in ").concat(time, "ms"));
+};
 
-  return CountdownTimer;
-}();
+var logError = function logError(id) {
+  console.warn("Error processing transaction ".concat(id, ". Please try again later."));
+};
 
-new CountdownTimer({
-  selector: "#timer-1",
-  targetDate: new Date("Jul 17, 2021")
-});
-},{"./scss/main.scss":"scss/main.scss"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+makeTransaction({
+  id: 70,
+  amount: 150
+}).then(logSuccess).catch(logError);
+makeTransaction({
+  id: 71,
+  amount: 230
+}).then(logSuccess).catch(logError);
+makeTransaction({
+  id: 72,
+  amount: 75
+}).then(logSuccess).catch(logError);
+makeTransaction({
+  id: 73,
+  amount: 100
+}).then(logSuccess).catch(logError);
+},{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -298,7 +205,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62187" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58013" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -474,5 +381,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
-//# sourceMappingURL=/src.e31bb0bc.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index_3.js"], null)
+//# sourceMappingURL=/index_3.39c8ed89.js.map
